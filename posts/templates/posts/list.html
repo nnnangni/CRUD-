@@ -8,10 +8,24 @@
 </head>
 <body>
     <h1>여기는 리스트</h1>
+    <div>
     {% for post in posts %}
-        {{post.title}}
-        {{post.content}}
+        <h1>{{post.title}}</h1>
+        <h3>{{post.content}}</h3>
         <a href="{% url "posts:delete" post.id %}">삭제</a>
+        <a href="{% url "posts:update" post.id %}">수정</a>
+        <form method='post' action="{% url 'posts:comment_new' post.id %}">
+            <!--post방식이기 때문-->
+            {% csrf_token %}
+            {{comment_form}}
+            <input type="submit" value="Submit"/>
+        </form>
+        {% for comment in post.comment_set.all %}
+            <p>{{comment.comment}}</p>
+            <!--<p>{{comment.content}} 나중에 변수정할때 주의</p>--> 
+            <a href="{% url 'posts:comment_delete' post.id comment.id %}">삭제</a>
+        {% endfor %}
     {% endfor %}
+    </div>
 </body>
 </html>
